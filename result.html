@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Examination Result | Ken E-Test</title>
+  <link rel="icon" href="assets/images/logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/result.css">
+</head>
+<body data-page="result">
+
+  <header class="app-header">
+    <div class="container app-header-inner">
+      <a class="brand" href="dashboard.html">
+        <img class="brand-logo" src="assets/images/logo.svg" alt="">
+        <span class="brand-text"><strong>Ken E-Test</strong><small>Online Quiz and Examination System</small></span>
+      </a>
+      <nav class="app-nav" aria-label="Main">
+        <a href="dashboard.html" class="nav-link">Dashboard</a>
+        <a href="history.html" class="nav-link">History</a>
+      </nav>
+      <div class="user-menu">
+        <span class="user-name" id="userName"></span>
+        <button type="button" class="btn btn-secondary btn-sm" data-logout="student">Log out</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="page container">
+    <div class="result-wrap">
+      <div class="page-head">
+        <div>
+          <h1>Examination result</h1>
+          <p>Your marked result has been saved.</p>
+        </div>
+      </div>
+
+      <div id="pageAlert" class="alert" role="alert" hidden></div>
+      <div id="loadingState" class="loading-state">Loading result...</div>
+
+      <div id="resultContent" hidden>
+        <section class="result-hero" id="resultHero">
+          <div class="ring" aria-hidden="true">
+            <svg viewBox="0 0 120 120">
+              <circle class="ring-track" cx="60" cy="60" r="54"></circle>
+              <circle class="ring-value" id="ringValue" cx="60" cy="60" r="54"></circle>
+            </svg>
+            <div class="ring-text" id="ringText">0%</div>
+          </div>
+          <div>
+            <div class="result-headline">
+              <span class="score" id="resScore"></span>
+              <span id="resStatus"></span>
+            </div>
+            <p class="result-summary" id="resSummary"></p>
+          </div>
+        </section>
+
+        <dl class="detail-list">
+          <div><dt>Examination</dt><dd id="resExamTitle"></dd></div>
+          <div><dt>Student</dt><dd id="resStudent"></dd></div>
+          <div><dt>Percentage</dt><dd id="resPercentage"></dd></div>
+          <div><dt>Pass mark</dt><dd id="resPassMark"></dd></div>
+          <div><dt>Submitted</dt><dd id="resDate"></dd></div>
+          <div><dt>Time spent</dt><dd id="resTime"></dd></div>
+        </dl>
+
+        <div class="result-actions">
+          <a class="btn btn-primary" href="dashboard.html">Back to dashboard</a>
+          <a class="btn btn-secondary" href="history.html">View examination history</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/result.js"></script>
+</body>
+</html>

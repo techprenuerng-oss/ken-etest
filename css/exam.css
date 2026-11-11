@@ -1,0 +1,113 @@
+/* Ken E-Test - exam.css
+   The examination screen. Answer options and the question navigator use round
+   "bubbles", like an OMR answer sheet. */
+
+.exam-body { background: var(--paper); min-height: 100vh; }
+
+/* ---------- Top bar ---------- */
+.exam-bar {
+  position: sticky; top: 0; z-index: 30; background: var(--white); border-bottom: 1px solid var(--line);
+}
+.exam-bar-inner {
+  display: grid; grid-template-columns: auto 1fr auto auto; align-items: center; gap: .6rem 1.25rem;
+  padding: .65rem 0;
+}
+.exam-meta { min-width: 0; }
+.exam-meta h1 { font-size: 1.1rem; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.exam-meta span { font-size: .82rem; color: var(--muted); }
+.exam-status { display: flex; align-items: center; gap: .6rem; }
+
+.timer {
+  display: inline-flex; align-items: center; gap: .45rem; padding: .35rem .9rem; border-radius: 999px;
+  background: var(--ink); color: var(--white); font-weight: 700; font-size: 1.1rem;
+  font-variant-numeric: tabular-nums;
+}
+.timer-label { font-size: .72rem; font-weight: 600; opacity: .8; }
+.timer.timer-warning { background: var(--amber); color: var(--ink); }
+.timer.timer-danger { background: var(--red); color: var(--white); }
+
+.warning-badge {
+  padding: .3rem .7rem; border-radius: 999px; font-size: .8rem; font-weight: 700;
+  background: #e6ecee; color: var(--muted); white-space: nowrap;
+}
+.warning-badge.has-warnings { background: var(--amber-soft); color: #7a4f08; }
+
+.warning-banner {
+  background: var(--amber-soft); border-bottom: 1px solid #efd29c; color: #6b4306;
+  padding: .65rem 0; font-weight: 600; font-size: .95rem;
+}
+
+/* ---------- Layout ---------- */
+.exam-layout {
+  display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 1.25rem;
+  padding: 1.5rem 0 3rem; align-items: start;
+}
+
+/* Questions cannot be selected or dragged during the exam */
+.question-panel, .nav-panel { user-select: none; -webkit-user-select: none; }
+
+.progress { margin-bottom: 1.4rem; }
+.progress-text { display: flex; justify-content: space-between; font-size: .85rem; color: var(--muted); margin-bottom: .4rem; }
+.progress-track { height: 8px; background: #e3eaec; border-radius: 999px; overflow: hidden; }
+.progress-fill { height: 100%; width: 0; background: var(--teal); border-radius: 999px; transition: width .3s; }
+
+.question-number { font-size: .9rem; font-weight: 700; color: var(--teal); margin-bottom: .5rem; }
+.question-text { font-family: var(--font-head); font-size: clamp(1.2rem, 2.4vw, 1.5rem); color: var(--ink); line-height: 1.4; margin-bottom: 1.4rem; }
+
+.options { display: grid; gap: .7rem; margin-bottom: 1.6rem; }
+.option {
+  display: flex; align-items: center; gap: .9rem; width: 100%; text-align: left;
+  padding: .85rem 1rem; font: inherit; color: var(--text); cursor: pointer;
+  background: var(--white); border: 1.5px solid var(--line); border-radius: 12px;
+  transition: border-color .15s, background-color .15s;
+}
+.option:hover { border-color: var(--teal); }
+.option.selected { border-color: var(--ink); background: var(--mint); }
+.option.selected .bubble { background: var(--ink); border-color: var(--ink); color: var(--white); }
+.option-text { flex: 1; }
+
+.question-footer { display: flex; justify-content: space-between; gap: .75rem; }
+
+/* ---------- Navigator ---------- */
+.nav-panel { position: sticky; top: 84px; }
+.nav-panel h2 { font-size: 1.1rem; }
+.nav-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(40px, 1fr)); gap: .5rem; margin: .9rem 0 1.1rem; }
+.nav-q {
+  width: 40px; height: 40px; border-radius: 50%; padding: 0; cursor: pointer;
+  font: inherit; font-weight: 700; font-size: .85rem;
+  background: var(--white); color: var(--muted); border: 1.5px solid var(--line);
+}
+.nav-q:hover { border-color: var(--teal); }
+.nav-q.answered { background: var(--teal); border-color: var(--teal); color: var(--white); }
+.nav-q.current { border-color: var(--ink); box-shadow: 0 0 0 3px var(--amber); color: var(--ink); }
+.nav-q.answered.current { color: var(--white); }
+
+.legend { list-style: none; margin: 0 0 1.1rem; padding: 0; display: grid; gap: .4rem; font-size: .85rem; color: var(--muted); }
+.legend li { display: flex; align-items: center; gap: .55rem; }
+.legend i { width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid var(--line); background: var(--white); }
+.legend i.answered { background: var(--teal); border-color: var(--teal); }
+.legend i.current { border-color: var(--ink); box-shadow: 0 0 0 2px var(--amber); }
+
+/* ---------- Start gate ---------- */
+.gate { display: flex; justify-content: center; padding: 3rem 1rem; }
+.gate-card { width: min(520px, 100%); }
+.gate-card h1 { font-size: 1.8rem; }
+.gate-info { list-style: none; margin: 1rem 0; padding: 0; display: flex; flex-wrap: wrap; gap: .5rem; }
+.gate-info li { background: var(--mint); border-radius: 999px; padding: .2rem .8rem; font-size: .88rem; }
+.gate-note { color: var(--muted); font-size: .92rem; }
+
+/* Overlays use the shared modal styles; these must sit above the exam bar */
+.overlay-top { z-index: 150; }
+
+@media (max-width: 900px) {
+  .exam-layout { grid-template-columns: 1fr; }
+  .nav-panel { position: static; }
+}
+@media (max-width: 640px) {
+  .exam-bar-inner { grid-template-columns: 1fr auto; }
+  .exam-meta { grid-column: 1 / -1; order: 3; }
+  .exam-status { order: 2; }
+  .exam-bar .brand-text { display: none; }
+  .timer { font-size: 1rem; padding: .3rem .7rem; }
+  .question-footer .btn { flex: 1; }
+}

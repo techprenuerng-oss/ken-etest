@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Examination | Ken E-Test</title>
+  <link rel="icon" href="assets/images/logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/exam.css">
+</head>
+<body class="exam-body" data-page="exam">
+
+  <header class="exam-bar">
+    <div class="container exam-bar-inner">
+      <div class="brand">
+        <img class="brand-logo" src="assets/images/logo.svg" alt="">
+        <span class="brand-text"><strong>Ken E-Test</strong><small>Online Quiz and Examination System</small></span>
+      </div>
+      <div class="exam-meta">
+        <h1 id="examTitle">Examination</h1>
+        <span>Student: <strong id="studentName"></strong></span>
+      </div>
+      <div class="exam-status">
+        <span class="warning-badge" id="warningBadge">Warnings 0/3</span>
+        <div class="timer" id="timer" role="timer" aria-label="Time remaining">
+          <span class="timer-label">Time left</span>
+          <span id="timerValue">--:--</span>
+        </div>
+      </div>
+      <button type="button" class="btn btn-primary js-submit">Submit Exam</button>
+    </div>
+  </header>
+
+  <div class="warning-banner" role="alert" id="warningBanner" hidden>
+    <div class="container" id="warningText"></div>
+  </div>
+
+  <!-- Shown first: the click on the button starts the timer and opens fullscreen -->
+  <section class="gate" id="startGate">
+    <div class="card gate-card">
+      <h1 id="gateTitle">Loading examination...</h1>
+      <ul class="gate-info" id="gateInfo"></ul>
+      <div id="gateMessage" class="alert" hidden></div>
+      <p class="gate-note" id="gateNote"></p>
+      <p class="gate-note">This examination uses basic browser-based monitoring. Leaving the examination window, exiting fullscreen mode, or attempting restricted actions may generate a warning and may be recorded.</p>
+      <button type="button" id="beginBtn" class="btn btn-primary btn-lg btn-block" disabled>Begin examination</button>
+      <a class="btn btn-ghost btn-block" href="dashboard.html" style="margin-top:.5rem">Back to dashboard</a>
+    </div>
+  </section>
+
+  <main class="container exam-layout" id="examLayout" hidden>
+    <section class="card question-panel" aria-live="polite">
+      <div class="progress">
+        <div class="progress-text"><span id="progressText">0 of 0 answered</span></div>
+        <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+      </div>
+
+      <div class="question-number" id="questionNumber">Question 1</div>
+      <p class="question-text" id="questionText"></p>
+      <div class="options" id="optionsList" role="radiogroup" aria-label="Answer options"></div>
+
+      <div class="question-footer">
+        <button type="button" class="btn btn-secondary" id="prevBtn">Previous</button>
+        <button type="button" class="btn btn-secondary" id="nextBtn">Next</button>
+      </div>
+    </section>
+
+    <aside class="card nav-panel" aria-label="Question navigation">
+      <h2>Questions</h2>
+      <div class="nav-grid" id="navGrid"></div>
+      <ul class="legend">
+        <li><i class="answered"></i>Answered: <strong id="answeredCount">0</strong></li>
+        <li><i></i>Not answered: <strong id="unansweredCount">0</strong></li>
+        <li><i class="current"></i>Current question</li>
+      </ul>
+      <button type="button" class="btn btn-primary btn-block js-submit">Submit Exam</button>
+    </aside>
+  </main>
+
+  <!-- Submit confirmation -->
+  <div class="modal-overlay" id="submitModal" hidden>
+    <div class="modal modal-small" role="dialog" aria-modal="true" aria-labelledby="submitTitle">
+      <h2 id="submitTitle">Submit examination?</h2>
+      <p id="modalSummary"></p>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" id="cancelSubmitBtn">Keep working</button>
+        <button type="button" class="btn btn-primary" id="confirmSubmitBtn">Submit exam</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shown when the student leaves fullscreen -->
+  <div class="modal-overlay overlay-top" id="fullscreenOverlay" hidden>
+    <div class="modal modal-small" role="alertdialog" aria-modal="true" aria-labelledby="fsTitle">
+      <h2 id="fsTitle">Return to fullscreen</h2>
+      <p id="fsMessage"></p>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-primary" id="fsReturnBtn">Enter fullscreen</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shown while the answers are being sent -->
+  <div class="modal-overlay overlay-top" id="submittingOverlay" hidden>
+    <div class="modal modal-small" role="alertdialog" aria-modal="true" aria-labelledby="submittingTitle">
+      <h2 id="submittingTitle">Submitting examination</h2>
+      <p id="submittingText"></p>
+      <div id="submitError" class="alert alert-error" hidden></div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" id="backToExamBtn" hidden>Back to examination</button>
+        <button type="button" class="btn btn-primary" id="retrySubmitBtn" hidden>Retry submission</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/proctoring.js"></script>
+  <script src="js/exam.js"></script>
+</body>
+</html>

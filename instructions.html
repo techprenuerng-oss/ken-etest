@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Examination Instructions | Ken E-Test</title>
+  <link rel="icon" href="assets/images/logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body data-page="instructions">
+
+  <header class="app-header">
+    <div class="container app-header-inner">
+      <a class="brand" href="dashboard.html">
+        <img class="brand-logo" src="assets/images/logo.svg" alt="">
+        <span class="brand-text"><strong>Ken E-Test</strong><small>Online Quiz and Examination System</small></span>
+      </a>
+      <nav class="app-nav" aria-label="Main">
+        <a href="dashboard.html" class="nav-link">Dashboard</a>
+        <a href="history.html" class="nav-link">History</a>
+      </nav>
+      <div class="user-menu">
+        <span class="user-name" id="userName"></span>
+        <button type="button" class="btn btn-secondary btn-sm" data-logout="student">Log out</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="page container">
+    <div id="pageAlert" class="alert" role="alert" hidden></div>
+    <div id="loadingState" class="loading-state">Loading examination...</div>
+
+    <div id="instructionsContent" hidden>
+      <div class="page-head">
+        <div>
+          <h1 id="examTitle"></h1>
+          <p id="examSubject"></p>
+        </div>
+        <a class="btn btn-secondary btn-sm" href="dashboard.html">Back to dashboard</a>
+      </div>
+
+      <div class="instruction-layout">
+        <div>
+          <section class="card">
+            <h2>About this examination</h2>
+            <p id="examDescription" class="muted"></p>
+            <dl class="info-list">
+              <div><dt>Questions</dt><dd id="infoQuestions"></dd></div>
+              <div><dt>Duration</dt><dd id="infoDuration"></dd></div>
+              <div><dt>Total marks</dt><dd id="infoMarks"></dd></div>
+              <div><dt>Pass mark</dt><dd id="infoPassMark"></dd></div>
+            </dl>
+          </section>
+
+          <section class="card" style="margin-top:1.25rem">
+            <h2>Rules</h2>
+            <ul class="rules">
+              <li>Every question has four options. Choose one answer for each question.</li>
+              <li>You can move between questions and change your answers until you submit.</li>
+              <li>The timer starts when you click <strong>Begin examination</strong> on the next page. It cannot be paused.</li>
+              <li>When the time reaches zero, your answers are submitted automatically.</li>
+              <li>You can take each examination only once. Your result appears as soon as you submit.</li>
+              <li>The examination opens in fullscreen mode. You get at most three warnings, and the third one submits your examination automatically.</li>
+              <li>Use a stable Internet connection and do not close or refresh the page during the examination.</li>
+            </ul>
+          </section>
+        </div>
+
+        <aside class="start-panel">
+          <div class="notice-box">
+            <h3>Basic Browser-Based Examination Monitoring</h3>
+            <p>This examination uses basic browser-based monitoring. Leaving the examination window, exiting fullscreen mode, or attempting restricted actions may generate a warning and may be recorded.</p>
+          </div>
+
+          <div class="card" id="startPanel">
+            <div id="inProgressNote" class="alert alert-info" hidden>You already started this examination. The timer kept running, so you have less time left.</div>
+            <label class="check" for="agreeCheck">
+              <input type="checkbox" id="agreeCheck">
+              <span>I have read the instructions and I understand the monitoring notice.</span>
+            </label>
+            <button type="button" id="startBtn" class="btn btn-primary btn-lg" disabled style="margin-top:1rem">Proceed to examination</button>
+          </div>
+
+          <div class="card" id="alreadyTaken" hidden>
+            <h3>You have taken this examination</h3>
+            <p class="muted">Each examination can only be taken once.</p>
+            <a class="btn btn-primary btn-block" id="viewResultLink" href="history.html">View your result</a>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/instructions.js"></script>
+</body>
+</html>

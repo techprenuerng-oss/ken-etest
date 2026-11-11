@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Examination History | Ken E-Test</title>
+  <link rel="icon" href="assets/images/logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body data-page="history">
+
+  <header class="app-header">
+    <div class="container app-header-inner">
+      <a class="brand" href="dashboard.html">
+        <img class="brand-logo" src="assets/images/logo.svg" alt="">
+        <span class="brand-text"><strong>Ken E-Test</strong><small>Online Quiz and Examination System</small></span>
+      </a>
+      <nav class="app-nav" aria-label="Main">
+        <a href="dashboard.html" class="nav-link">Dashboard</a>
+        <a href="history.html" class="nav-link active" aria-current="page">History</a>
+      </nav>
+      <div class="user-menu">
+        <span class="user-name" id="userName"></span>
+        <button type="button" class="btn btn-secondary btn-sm" data-logout="student">Log out</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="page container">
+    <div class="page-head">
+      <div>
+        <h1>Examination history</h1>
+        <p id="historyCount">Loading...</p>
+      </div>
+    </div>
+
+    <div id="pageAlert" class="alert" role="alert" hidden></div>
+
+    <div class="table-wrap">
+      <table class="data">
+        <thead>
+          <tr><th>Examination</th><th>Score</th><th>Percentage</th><th>Status</th><th>Submitted</th><th>Time spent</th><th></th></tr>
+        </thead>
+        <tbody id="historyBody"><tr><td colspan="7" class="empty-cell">Loading...</td></tr></tbody>
+      </table>
+    </div>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/history.js"></script>
+</body>
+</html>

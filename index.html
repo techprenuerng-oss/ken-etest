@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ken E-Test | Online Quiz and Examination System</title>
+  <meta name="description" content="Ken E-Test is a web-based online quiz and examination system with automatic marking and basic browser-based monitoring.">
+  <link rel="icon" href="assets/images/logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="landing" data-page="landing">
+
+  <header class="site-header">
+    <div class="container site-header-inner">
+      <a class="brand" href="index.html">
+        <img class="brand-logo" src="assets/images/logo.svg" alt="">
+        <span class="brand-text"><strong>Ken E-Test</strong><small>Online Quiz and Examination System</small></span>
+      </a>
+      <nav class="site-nav" aria-label="Main">
+        <a href="#how">How it works</a>
+        <a href="#monitoring">Monitoring</a>
+        <a href="admin/login.html">Admin</a>
+        <a class="btn btn-secondary btn-sm" href="login.html">Student login</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <h1>Take your exam online and see your score when you submit.</h1>
+          <p class="lead">Ken E-Test runs timed multiple-choice examinations in the browser. Questions are loaded from a MySQL database, answers are marked automatically, and every result is stored for review.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary btn-lg" href="register.html">Create student account</a>
+            <a class="btn btn-secondary btn-lg" href="login.html">Student login</a>
+          </div>
+          <p class="hero-note">Examiners can sign in on the <a href="admin/login.html">admin login page</a>.</p>
+        </div>
+
+        <div class="hero-preview" aria-hidden="true">
+          <div class="preview-bar"><span>ICT Fundamentals</span><span class="preview-timer">12:48</span></div>
+          <p class="preview-q">Which type of memory loses its content when the computer is switched off?</p>
+          <ul class="preview-options">
+            <li><span class="bubble">A</span>ROM</li>
+            <li><span class="bubble">B</span>Hard disk</li>
+            <li><span class="bubble">C</span>Flash drive</li>
+            <li class="chosen"><span class="bubble">D</span>RAM</li>
+          </ul>
+          <div class="preview-nav">
+            <span class="done">1</span><span class="done">2</span><span class="done">3</span><span class="now">4</span>
+            <span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="features">
+      <div class="container">
+        <div class="section-head">
+          <h2>What the system does</h2>
+          <p class="muted">A complete examination cycle, from registration to results, using only a web browser.</p>
+        </div>
+        <div class="split">
+          <div class="card">
+            <h3>For students</h3>
+            <ul class="feature-list">
+              <li>Register once and log in with an email and password</li>
+              <li>See the examinations that are open to you</li>
+              <li>Read the instructions before you start</li>
+              <li>Move between questions freely and see which ones are answered</li>
+              <li>A countdown timer submits your answers automatically at zero</li>
+              <li>Get your score, percentage and pass or fail status at once</li>
+              <li>Review every examination you have taken</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>For administrators</h3>
+            <ul class="feature-list">
+              <li>Create examinations and open or close them</li>
+              <li>Add, edit and delete multiple-choice questions</li>
+              <li>View registered students</li>
+              <li>View results and filter them by examination</li>
+              <li>Review the monitoring events recorded during examinations</li>
+              <li>See totals and average scores on the dashboard</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-tint" id="how">
+      <div class="container">
+        <div class="section-head">
+          <h2>How an examination works</h2>
+        </div>
+        <ol class="steps">
+          <li><strong>Register</strong><span>Create a student account and log in.</span></li>
+          <li><strong>Choose</strong><span>Pick an available examination on your dashboard.</span></li>
+          <li><strong>Read</strong><span>Check the duration, pass mark and rules.</span></li>
+          <li><strong>Answer</strong><span>Answer the questions before the timer ends.</span></li>
+          <li><strong>Result</strong><span>Submit and see your marked result immediately.</span></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="section" id="monitoring">
+      <div class="container">
+        <div class="notice-box">
+          <h3>Basic Browser-Based Examination Monitoring</h3>
+          <p>During an examination the page watches for tab switches, window changes, exiting fullscreen and restricted actions such as copying or right-clicking. Each event is recorded for the examiner to review.</p>
+          <p>This is simple browser monitoring, not AI proctoring. It cannot prove or prevent cheating on its own.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>Ken E-Test: Design and Implementation of an Online Quiz and Examination System</span>
+      <span>Designed by: KENANAGHA DEINYEFA GODSPOWER</span>
+    </div>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Students | Ken E-Test Admin</title>
+  <link rel="icon" href="../assets/images/logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body data-page="admin-students">
+<div class="admin-shell">
+  <aside class="sidebar">
+    <a class="brand" href="dashboard.html">
+      <img class="brand-logo" src="../assets/images/logo.svg" alt="">
+      <span class="brand-text"><strong>Ken E-Test</strong><small>Admin panel</small></span>
+    </a>
+    <nav class="side-nav" aria-label="Admin">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="exams.html">Examinations</a>
+        <a href="questions.html">Questions</a>
+        <a href="students.html" class="active" aria-current="page">Students</a>
+        <a href="results.html" data-nav="results">Results</a>
+        <a href="results.html?tab=logs" data-nav="logs">Monitoring log</a>
+    </nav>
+    <div class="side-footer">
+      <strong class="js-admin-name"></strong>
+      <button type="button" class="btn btn-ghost btn-sm" data-logout="admin">Log out</button>
+    </div>
+  </aside>
+
+  <main class="admin-main">
+    <div class="page-head"><div><h1>Students</h1><p>Everyone who has registered on the system.</p></div></div>
+    <div id="pageAlert" class="alert" role="alert" hidden></div>
+
+    <div class="toolbar">
+      <div class="filters">
+        <label for="studentSearch" class="visually-hidden">Search students</label>
+        <input type="text" id="studentSearch" placeholder="Search by name, email, ID or class">
+      </div>
+      <span class="summary-text" id="studentsCount"></span>
+    </div>
+    <div class="table-wrap">
+      <table class="data">
+        <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Class</th><th>Exams taken</th><th>Registered</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="studentsTableBody"><tr><td colspan="8" class="empty-cell">Loading...</td></tr></tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/admin.js"></script>
+</body>
+</html>

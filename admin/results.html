@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Results | Ken E-Test Admin</title>
+  <link rel="icon" href="../assets/images/logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body data-page="admin-results">
+<div class="admin-shell">
+  <aside class="sidebar">
+    <a class="brand" href="dashboard.html">
+      <img class="brand-logo" src="../assets/images/logo.svg" alt="">
+      <span class="brand-text"><strong>Ken E-Test</strong><small>Admin panel</small></span>
+    </a>
+    <nav class="side-nav" aria-label="Admin">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="exams.html">Examinations</a>
+        <a href="questions.html">Questions</a>
+        <a href="students.html">Students</a>
+        <a href="results.html" data-nav="results">Results</a>
+        <a href="results.html?tab=logs" data-nav="logs">Monitoring log</a>
+    </nav>
+    <div class="side-footer">
+      <strong class="js-admin-name"></strong>
+      <button type="button" class="btn btn-ghost btn-sm" data-logout="admin">Log out</button>
+    </div>
+  </aside>
+
+  <main class="admin-main">
+    <div class="page-head"><div><h1>Results and monitoring</h1><p>Examination scores and the events recorded during examinations.</p></div></div>
+    <div id="pageAlert" class="alert" role="alert" hidden></div>
+
+    <div class="tabs" role="tablist">
+      <button type="button" class="tab active" id="tabResultsBtn" role="tab" aria-selected="true">Results</button>
+      <button type="button" class="tab" id="tabLogsBtn" role="tab" aria-selected="false">Monitoring log</button>
+    </div>
+
+    <section id="resultsPanel">
+      <div class="toolbar">
+        <div class="filters">
+          <label for="resultsExamFilter" class="visually-hidden">Filter by examination</label>
+          <select id="resultsExamFilter"></select>
+        </div>
+        <span class="summary-text" id="resultsSummary"></span>
+      </div>
+      <div class="table-wrap">
+        <table class="data">
+          <thead><tr><th>Result</th><th>Student</th><th>Examination</th><th>Score</th><th>Percentage</th><th>Status</th><th>Submitted</th><th>Time spent</th></tr></thead>
+          <tbody id="resultsTableBody"><tr><td colspan="8" class="empty-cell">Loading...</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="logsPanel" hidden>
+      <p class="muted">Basic browser-based monitoring records events such as tab switches and restricted actions. An event is a sign to review, not proof of cheating.</p>
+      <div class="toolbar">
+        <div class="filters">
+          <label for="logsExamFilter" class="visually-hidden">Filter by examination</label>
+          <select id="logsExamFilter"></select>
+          <label for="logsTypeFilter" class="visually-hidden">Filter by event type</label>
+          <select id="logsTypeFilter">
+            <option value="">All event types</option>
+            <option value="TAB_SWITCH">TAB_SWITCH</option>
+            <option value="FULLSCREEN_EXIT">FULLSCREEN_EXIT</option>
+            <option value="WINDOW_BLUR">WINDOW_BLUR</option>
+            <option value="COPY_ATTEMPT">COPY_ATTEMPT</option>
+            <option value="CUT_ATTEMPT">CUT_ATTEMPT</option>
+            <option value="PASTE_ATTEMPT">PASTE_ATTEMPT</option>
+            <option value="RIGHT_CLICK">RIGHT_CLICK</option>
+            <option value="KEYBOARD_RESTRICTION">KEYBOARD_RESTRICTION</option>
+            <option value="MAX_WARNINGS_REACHED">MAX_WARNINGS_REACHED</option>
+          </select>
+        </div>
+        <span class="summary-text" id="logsSummary"></span>
+      </div>
+      <div class="table-wrap">
+        <table class="data">
+          <thead><tr><th>Log</th><th>Student</th><th>Examination</th><th>Event</th><th>Description</th><th>Timestamp</th><th>Severity</th></tr></thead>
+          <tbody id="logsTableBody"><tr><td colspan="7" class="empty-cell">Loading...</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</div>
+
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/admin.js"></script>
+</body>
+</html>

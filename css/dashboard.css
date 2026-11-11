@@ -1,0 +1,31 @@
+/* Ken E-Test - dashboard.css
+   Student dashboard, instructions page and examination history. */
+
+.exam-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 1.1rem; }
+.exam-card { display: flex; flex-direction: column; background: var(--white); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.exam-card-body { padding: 1.2rem 1.2rem .8rem; flex: 1; }
+.exam-card h3 { margin-bottom: .1rem; }
+.exam-subject { color: var(--teal); font-weight: 600; font-size: .88rem; margin-bottom: .6rem; }
+.exam-desc { color: var(--muted); font-size: .92rem; }
+.chips { list-style: none; margin: .5rem 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: .4rem; }
+.chips li { background: var(--mint); color: var(--ink); border-radius: 999px; padding: .15rem .7rem; font-size: .8rem; font-weight: 600; }
+.exam-card-action { padding: 0 1.2rem 1.2rem; display: grid; gap: .6rem; }
+.exam-done { display: flex; align-items: center; gap: .6rem; font-weight: 600; color: var(--ink); }
+
+/* Instructions page */
+.instruction-layout { display: grid; grid-template-columns: 1.4fr 1fr; gap: 1.25rem; align-items: start; }
+.info-list { margin: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+.info-list div { background: var(--paper); border-radius: 10px; padding: .75rem .9rem; }
+.info-list dt { font-size: .8rem; color: var(--muted); }
+.info-list dd { margin: 0; font-family: var(--font-head); font-size: 1.25rem; font-weight: 700; color: var(--ink); }
+.rules { margin: 0; padding-left: 1.2rem; }
+.rules li { margin-bottom: .55rem; }
+.start-panel { display: grid; gap: 1rem; }
+.start-panel .btn { width: 100%; }
+
+@media (max-width: 860px) {
+  .instruction-layout { grid-template-columns: 1fr; }
+}
+@media (max-width: 480px) {
+  .info-list { grid-template-columns: 1fr 1fr; gap: .6rem; }
+}

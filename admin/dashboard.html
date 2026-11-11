@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard | Ken E-Test Admin</title>
+  <link rel="icon" href="../assets/images/logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body data-page="admin-dashboard">
+<div class="admin-shell">
+  <aside class="sidebar">
+    <a class="brand" href="dashboard.html">
+      <img class="brand-logo" src="../assets/images/logo.svg" alt="">
+      <span class="brand-text"><strong>Ken E-Test</strong><small>Admin panel</small></span>
+    </a>
+    <nav class="side-nav" aria-label="Admin">
+        <a href="dashboard.html" class="active" aria-current="page">Dashboard</a>
+        <a href="exams.html">Examinations</a>
+        <a href="questions.html">Questions</a>
+        <a href="students.html">Students</a>
+        <a href="results.html" data-nav="results">Results</a>
+        <a href="results.html?tab=logs" data-nav="logs">Monitoring log</a>
+    </nav>
+    <div class="side-footer">
+      <strong class="js-admin-name"></strong>
+      <button type="button" class="btn btn-ghost btn-sm" data-logout="admin">Log out</button>
+    </div>
+  </aside>
+
+  <main class="admin-main">
+    <div class="page-head"><div><h1>Dashboard</h1><p>An overview of examinations and results.</p></div></div>
+    <div id="pageAlert" class="alert" role="alert" hidden></div>
+
+    <div class="stat-grid">
+      <div class="stat-card"><div class="stat-value" id="statStudents">-</div><div class="stat-label">Registered students</div></div>
+      <div class="stat-card"><div class="stat-value" id="statExams">-</div><div class="stat-label">Examinations</div></div>
+      <div class="stat-card"><div class="stat-value" id="statSubmissions">-</div><div class="stat-label">Submissions</div></div>
+      <div class="stat-card"><div class="stat-value" id="statAverage">-</div><div class="stat-label">Average score</div></div>
+      <div class="stat-card"><div class="stat-value" id="statPassRate">-</div><div class="stat-label">Pass rate</div></div>
+      <div class="stat-card"><div class="stat-value" id="statEvents">-</div><div class="stat-label"><a href="results.html?tab=logs">Monitoring events</a></div></div>
+    </div>
+
+    <section class="card">
+      <h2>Average score by examination</h2>
+      <div id="examPerformance"><div class="loading-state">Loading...</div></div>
+    </section>
+
+    <div class="block-title"><h2>Latest submissions</h2><a href="results.html">View all results</a></div>
+    <div class="table-wrap">
+      <table class="data">
+        <thead><tr><th>Student</th><th>Examination</th><th>Score</th><th>Status</th><th>Date</th></tr></thead>
+        <tbody id="recentResultsBody"><tr><td colspan="5" class="empty-cell">Loading...</td></tr></tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/admin.js"></script>
+</body>
+</html>

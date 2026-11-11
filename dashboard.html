@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard | Ken E-Test</title>
+  <link rel="icon" href="assets/images/logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body data-page="dashboard">
+
+  <header class="app-header">
+    <div class="container app-header-inner">
+      <a class="brand" href="dashboard.html">
+        <img class="brand-logo" src="assets/images/logo.svg" alt="">
+        <span class="brand-text"><strong>Ken E-Test</strong><small>Online Quiz and Examination System</small></span>
+      </a>
+      <nav class="app-nav" aria-label="Main">
+        <a href="dashboard.html" class="nav-link active" aria-current="page">Dashboard</a>
+        <a href="history.html" class="nav-link">History</a>
+      </nav>
+      <div class="user-menu">
+        <span class="user-name" id="userName"></span>
+        <button type="button" class="btn btn-secondary btn-sm" data-logout="student">Log out</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="page container">
+    <div class="page-head">
+      <div>
+        <h1>Welcome, <span id="welcomeName"></span></h1>
+        <p id="studentClass"></p>
+      </div>
+    </div>
+
+    <div id="pageAlert" class="alert" role="alert" hidden></div>
+
+    <div class="stat-grid">
+      <div class="stat-card"><div class="stat-value" id="statAvailable">-</div><div class="stat-label">Examinations to take</div></div>
+      <div class="stat-card"><div class="stat-value" id="statTaken">-</div><div class="stat-label">Examinations taken</div></div>
+      <div class="stat-card"><div class="stat-value" id="statAverage">-</div><div class="stat-label">Average score</div></div>
+      <div class="stat-card"><div class="stat-value" id="statPassed">-</div><div class="stat-label">Examinations passed</div></div>
+    </div>
+
+    <div class="block-title"><h2>Available examinations</h2></div>
+    <div id="examGrid" class="exam-grid">
+      <div class="loading-state">Loading examinations...</div>
+    </div>
+
+    <div class="block-title"><h2>Recent results</h2><a href="history.html">View full history</a></div>
+    <div class="table-wrap">
+      <table class="data">
+        <thead><tr><th>Examination</th><th>Score</th><th>Percentage</th><th>Status</th><th>Date</th></tr></thead>
+        <tbody id="recentResultsBody"><tr><td colspan="5" class="empty-cell">Loading...</td></tr></tbody>
+      </table>
+    </div>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>

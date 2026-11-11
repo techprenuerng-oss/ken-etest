@@ -1,0 +1,35 @@
+/* Ken E-Test - auth.css
+   Login and registration pages (student and admin). */
+
+.auth-page { min-height: 100vh; display: grid; grid-template-columns: minmax(280px, 5fr) 6fr; }
+
+.auth-aside {
+  background: var(--ink); color: #cfe0e5; padding: clamp(1.5rem, 4vw, 3rem);
+  display: flex; flex-direction: column; justify-content: space-between; gap: 2rem;
+}
+.auth-aside .brand { color: var(--white); }
+.auth-aside .brand-text small { color: #9db8c0; }
+.auth-aside h1 { color: var(--white); font-size: clamp(1.7rem, 3vw, 2.4rem); }
+.auth-aside p { color: #b6cdd3; max-width: 26rem; }
+
+/* A short row of answer bubbles, with one filled in */
+.aside-bubbles { display: flex; gap: .6rem; }
+.aside-bubbles .bubble { background: transparent; border-color: #6e98a3; color: #c9dde2; }
+.aside-bubbles .bubble.filled { background: var(--amber); border-color: var(--amber); color: var(--ink); }
+
+.auth-main { display: flex; align-items: center; justify-content: center; padding: 2rem 1rem; }
+.auth-card { width: min(440px, 100%); }
+.auth-card h2 { font-size: 1.7rem; }
+.auth-card .subtitle { color: var(--muted); margin-bottom: 1.5rem; }
+.auth-links { margin-top: 1.25rem; font-size: .93rem; color: var(--muted); }
+.auth-links a { font-weight: 600; }
+.back-link { display: inline-block; margin-bottom: 1.25rem; font-size: .9rem; text-decoration: none; color: var(--muted); }
+.back-link:hover { color: var(--ink); }
+
+@media (max-width: 800px) {
+  .auth-page { grid-template-columns: 1fr; }
+  .auth-aside { padding: 1.25rem; gap: 1rem; }
+  .auth-aside p, .aside-bubbles { display: none; }
+  .auth-aside h1 { font-size: 1.4rem; margin: 0; }
+  .auth-main { align-items: flex-start; padding-top: 1.5rem; }
+}

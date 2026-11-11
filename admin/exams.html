@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Examinations | Ken E-Test Admin</title>
+  <link rel="icon" href="../assets/images/logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body data-page="admin-exams">
+<div class="admin-shell">
+  <aside class="sidebar">
+    <a class="brand" href="dashboard.html">
+      <img class="brand-logo" src="../assets/images/logo.svg" alt="">
+      <span class="brand-text"><strong>Ken E-Test</strong><small>Admin panel</small></span>
+    </a>
+    <nav class="side-nav" aria-label="Admin">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="exams.html" class="active" aria-current="page">Examinations</a>
+        <a href="questions.html">Questions</a>
+        <a href="students.html">Students</a>
+        <a href="results.html" data-nav="results">Results</a>
+        <a href="results.html?tab=logs" data-nav="logs">Monitoring log</a>
+    </nav>
+    <div class="side-footer">
+      <strong class="js-admin-name"></strong>
+      <button type="button" class="btn btn-ghost btn-sm" data-logout="admin">Log out</button>
+    </div>
+  </aside>
+
+  <main class="admin-main">
+    <div class="page-head">
+      <div><h1>Examinations</h1><p>Create examinations and choose which ones students can take.</p></div>
+      <button type="button" class="btn btn-primary" id="createExamBtn">Create examination</button>
+    </div>
+    <div id="pageAlert" class="alert" role="alert" hidden></div>
+
+    <div class="table-wrap">
+      <table class="data">
+        <thead><tr><th>ID</th><th>Examination</th><th>Duration</th><th>Questions</th><th>Pass mark</th><th>Submissions</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="examsTableBody"><tr><td colspan="8" class="empty-cell">Loading...</td></tr></tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+  <div class="modal-overlay" id="examModal" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="examModalTitle">
+      <h2 id="examModalTitle">Create examination</h2>
+      <div id="examFormAlert" class="alert" role="alert" hidden></div>
+      <form id="examForm" novalidate>
+        <input type="hidden" id="examIdInput">
+        <div class="field"><label for="examTitleInput">Title</label><input type="text" id="examTitleInput" maxlength="120" required></div>
+        <div class="field"><label for="examSubjectInput">Subject</label><input type="text" id="examSubjectInput" maxlength="80" required></div>
+        <div class="field"><label for="examDescriptionInput">Description</label><textarea id="examDescriptionInput" maxlength="300"></textarea></div>
+        <div class="field-row">
+          <div class="field"><label for="examDurationInput">Duration (minutes)</label><input type="number" id="examDurationInput" min="1" max="300" step="1" required></div>
+          <div class="field"><label for="examPassMarkInput">Pass mark (%)</label><input type="number" id="examPassMarkInput" min="0" max="100" step="1" required></div>
+        </div>
+        <div class="field">
+          <label for="examStatusInput">Status</label>
+          <select id="examStatusInput"><option value="Inactive">Inactive (hidden from students)</option><option value="Active">Active (open to students)</option></select>
+          <p class="hint">An examination needs at least one question before it can be active.</p>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="cancelExamBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="saveExamBtn">Save examination</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Student Login | Ken E-Test</title>
+  <link rel="icon" href="assets/images/logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/auth.css">
+</head>
+<body class="auth-page" data-page="login">
+
+  <aside class="auth-aside">
+    <a class="brand" href="index.html">
+      <img class="brand-logo" src="assets/images/logo.svg" alt="">
+      <span class="brand-text"><strong>Ken E-Test</strong><small>Online Quiz and Examination System</small></span>
+    </a>
+    <div>
+      <h1>Sit your examination and get your result straight away.</h1>
+      <p>Log in with the email and password you used to register.</p>
+    </div>
+    <div class="aside-bubbles" aria-hidden="true">
+      <span class="bubble">A</span><span class="bubble filled">B</span><span class="bubble">C</span><span class="bubble">D</span>
+    </div>
+  </aside>
+
+  <main class="auth-main">
+    <div class="auth-card">
+      <a class="back-link" href="index.html">Back to home page</a>
+      <h2>Student login</h2>
+      <p class="subtitle">Welcome back. Enter your details to continue.</p>
+
+      <div id="formAlert" class="alert" role="alert" hidden></div>
+
+      <form id="loginForm" novalidate>
+        <div class="field">
+          <label for="email">Email address</label>
+          <input type="email" id="email" name="email" autocomplete="email" required>
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" autocomplete="current-password" required>
+        </div>
+        <button type="submit" id="loginButton" class="btn btn-primary btn-block btn-lg">Log in</button>
+      </form>
+
+      <p class="auth-links">No account yet? <a href="register.html">Create a student account</a><br>
+        Examiner? <a href="admin/login.html">Go to admin login</a></p>
+    </div>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>

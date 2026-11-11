@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Questions | Ken E-Test Admin</title>
+  <link rel="icon" href="../assets/images/logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body data-page="admin-questions">
+<div class="admin-shell">
+  <aside class="sidebar">
+    <a class="brand" href="dashboard.html">
+      <img class="brand-logo" src="../assets/images/logo.svg" alt="">
+      <span class="brand-text"><strong>Ken E-Test</strong><small>Admin panel</small></span>
+    </a>
+    <nav class="side-nav" aria-label="Admin">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="exams.html">Examinations</a>
+        <a href="questions.html" class="active" aria-current="page">Questions</a>
+        <a href="students.html">Students</a>
+        <a href="results.html" data-nav="results">Results</a>
+        <a href="results.html?tab=logs" data-nav="logs">Monitoring log</a>
+    </nav>
+    <div class="side-footer">
+      <strong class="js-admin-name"></strong>
+      <button type="button" class="btn btn-ghost btn-sm" data-logout="admin">Log out</button>
+    </div>
+  </aside>
+
+  <main class="admin-main">
+    <div class="page-head">
+      <div><h1>Questions</h1><p>Add, edit and delete the multiple-choice questions of each examination.</p></div>
+      <button type="button" class="btn btn-primary" id="addQuestionBtn">Add question</button>
+    </div>
+    <div id="pageAlert" class="alert" role="alert" hidden></div>
+
+    <div class="toolbar">
+      <div class="filters">
+        <label for="examFilter" class="visually-hidden">Examination</label>
+        <select id="examFilter"></select>
+      </div>
+      <span class="summary-text" id="questionsSummary"></span>
+    </div>
+    <div id="questionsList"><div class="loading-state">Loading questions...</div></div>
+  </main>
+</div>
+
+  <div class="modal-overlay" id="questionModal" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="questionModalTitle">
+      <h2 id="questionModalTitle">Add question</h2>
+      <div id="questionFormAlert" class="alert" role="alert" hidden></div>
+      <form id="questionForm" novalidate>
+        <input type="hidden" id="questionIdInput">
+        <div class="field"><label for="questionExamInput">Examination</label><select id="questionExamInput"></select></div>
+        <div class="field"><label for="questionTextInput">Question</label><textarea id="questionTextInput" maxlength="500" required></textarea></div>
+        <div class="field-row">
+          <div class="field"><label for="optionAInput">Option A</label><input type="text" id="optionAInput" maxlength="200" required></div>
+          <div class="field"><label for="optionBInput">Option B</label><input type="text" id="optionBInput" maxlength="200" required></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label for="optionCInput">Option C</label><input type="text" id="optionCInput" maxlength="200" required></div>
+          <div class="field"><label for="optionDInput">Option D</label><input type="text" id="optionDInput" maxlength="200" required></div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="correctAnswerInput">Correct answer</label>
+            <select id="correctAnswerInput"><option value="">Choose...</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option></select>
+          </div>
+          <div class="field"><label for="marksInput">Marks</label><input type="number" id="marksInput" min="1" max="100" step="1" required></div>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="cancelQuestionBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="saveQuestionBtn">Save question</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/admin.js"></script>
+</body>
+</html>

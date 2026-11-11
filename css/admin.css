@@ -1,0 +1,75 @@
+/* Ken E-Test - admin.css
+   Admin panel layout and components. Shared basics come from style.css. */
+
+.admin-shell { display: grid; grid-template-columns: 240px minmax(0, 1fr); min-height: 100vh; }
+
+.sidebar {
+  background: var(--ink); color: #cfe0e5; padding: 1.25rem 1rem;
+  display: flex; flex-direction: column; gap: 1.5rem; position: sticky; top: 0; height: 100vh;
+}
+.sidebar .brand { color: var(--white); padding: 0 .4rem; }
+.sidebar .brand-text small { color: #9db8c0; }
+.side-nav { display: grid; gap: .2rem; }
+.side-nav a {
+  padding: .6rem .8rem; border-radius: 8px; color: #c4d8de; text-decoration: none; font-weight: 600; font-size: .93rem;
+}
+.side-nav a:hover { background: rgba(255, 255, 255, .08); color: var(--white); }
+.side-nav a.active { background: var(--white); color: var(--ink); }
+.side-footer { margin-top: auto; padding: 0 .4rem; font-size: .88rem; }
+.side-footer strong { display: block; color: var(--white); margin-bottom: .5rem; }
+.side-footer .btn-ghost { color: #d4e4e8; border: 1.5px solid #4c7482; width: 100%; }
+.side-footer .btn-ghost:hover { background: rgba(255, 255, 255, .1); color: var(--white); }
+
+.admin-main { padding: 2rem clamp(1rem, 3vw, 2.5rem) 3rem; min-width: 0; }
+.admin-main .page-head { margin-bottom: 1.25rem; }
+
+.toolbar { display: flex; align-items: center; justify-content: space-between; gap: .75rem 1rem; flex-wrap: wrap; margin-bottom: 1rem; }
+.toolbar .filters { display: flex; gap: .6rem; flex-wrap: wrap; align-items: center; }
+.toolbar select, .toolbar input[type="text"] { width: auto; min-width: 190px; }
+.summary-text { color: var(--muted); font-size: .9rem; }
+
+.tabs { display: flex; gap: .3rem; border-bottom: 2px solid var(--line); margin-bottom: 1.25rem; }
+.tab {
+  padding: .6rem 1rem; font: inherit; font-weight: 600; color: var(--muted); background: none; border: 0;
+  border-bottom: 3px solid transparent; margin-bottom: -2px; cursor: pointer;
+}
+.tab:hover { color: var(--ink); }
+.tab.active { color: var(--ink); border-bottom-color: var(--amber); }
+
+/* Dashboard bars */
+.bar-row { margin-bottom: 1rem; }
+.bar-row:last-child { margin-bottom: 0; }
+.bar-label { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; font-size: .9rem; margin-bottom: .3rem; }
+.bar-label span { color: var(--muted); }
+.bar-track { height: 10px; border-radius: 999px; background: #e3eaec; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 999px; background: var(--teal); }
+
+/* Question list */
+.question-card { background: var(--white); border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.2rem; margin-bottom: .9rem; }
+.question-card header { display: flex; justify-content: space-between; align-items: center; gap: .75rem; flex-wrap: wrap; margin-bottom: .6rem; }
+.q-index { font-weight: 700; color: var(--teal); }
+.question-card p { font-weight: 600; color: var(--ink); margin-bottom: .75rem; }
+.q-options { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; }
+.q-options li { display: flex; align-items: center; gap: .6rem; padding: .45rem .6rem; border: 1.5px solid var(--line); border-radius: 10px; font-size: .92rem; }
+.q-options li.correct { border-color: var(--green); background: var(--green-soft); }
+.q-options li.correct .bubble { background: var(--green); border-color: var(--green); color: var(--white); }
+.q-options .bubble { width: 26px; height: 26px; font-size: .78rem; }
+.correct-tag { margin-left: auto; font-size: .75rem; font-weight: 700; color: #1d5a3a; }
+
+.modal .field-row-3 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.admin-login-card { width: min(420px, 100%); }
+
+@media (max-width: 860px) {
+  .admin-shell { grid-template-columns: 1fr; }
+  .sidebar { position: static; height: auto; flex-direction: row; flex-wrap: wrap; align-items: center; gap: .75rem 1rem; padding: .8rem 1rem; }
+  .side-nav { display: flex; flex-wrap: wrap; order: 3; width: 100%; }
+  .side-footer { margin: 0 0 0 auto; display: flex; align-items: center; gap: .6rem; }
+  .side-footer strong { margin: 0; }
+  .side-footer .btn-ghost { width: auto; }
+  .sidebar .brand-text small { display: none; }
+}
+@media (max-width: 560px) {
+  .q-options { grid-template-columns: 1fr; }
+  .toolbar select, .toolbar input[type="text"] { width: 100%; }
+  .toolbar .filters { width: 100%; }
+}
