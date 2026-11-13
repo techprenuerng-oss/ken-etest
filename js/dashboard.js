@@ -57,6 +57,10 @@ function renderExams(exams) {
         "<span>" + escapeHtml(exam.attempt.score) + "/" + escapeHtml(exam.attempt.total_marks) +
         " (" + formatPercent(exam.attempt.percentage) + ")</span></div>" +
         '<a class="btn btn-secondary btn-block" href="result.html?id=' + encodeURIComponent(exam.attempt.result_id) + '">View result</a>';
+    } else if (exam.window_status === "upcoming") {
+      action = '<p class="muted">Scheduled to open: ' + escapeHtml(formatDateTime(exam.scheduled_start)) + '</p><button class="btn btn-secondary btn-block" disabled>Not yet available</button>';
+    } else if (exam.window_status === "expired") {
+      action = '<p class="muted">The scheduled examination period has ended.</p><button class="btn btn-secondary btn-block" disabled>Exam closed</button>';
     } else {
       action = '<a class="btn btn-primary btn-block" href="instructions.html?exam=' + encodeURIComponent(exam.exam_id) + '">View instructions</a>';
     }
@@ -67,6 +71,7 @@ function renderExams(exams) {
       '<p class="exam-desc">' + escapeHtml(exam.description) + "</p>" +
       '<ul class="chips"><li>' + escapeHtml(exam.total_questions) + " questions</li><li>" +
       escapeHtml(exam.duration_minutes) + " minutes</li><li>Pass mark " + escapeHtml(exam.pass_mark) + "%</li></ul>" +
+      (exam.scheduled_start ? '<p class="muted">Starts: ' + escapeHtml(formatDateTime(exam.scheduled_start)) + '</p>' : '') +
       "</div>" + '<div class="exam-card-action">' + action + "</div></article>";
   }).join("");
 }

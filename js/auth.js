@@ -54,14 +54,13 @@ function initStudentLogin() {
   form.addEventListener("submit", async function (event) {
     event.preventDefault();
     hideAlert(alertBox);
-    const email = form.elements.email.value.trim();
+    const matric = form.elements.matric_number.value.trim().toUpperCase();
     const password = form.elements.password.value;
 
-    if (!email || !password) return showAlert(alertBox, "Enter your email and password.");
-    if (!isValidEmail(email)) return showAlert(alertBox, "Enter a valid email address.");
+    if (!matric || !password) return showAlert(alertBox, "Enter your matriculation number and password.");
 
     setButtonLoading(button, true, "Logging in...");
-    const result = await API.loginStudent(email, password);
+    const result = await API.loginStudent(matric, password);
     setButtonLoading(button, false);
 
     if (!result.success) return showAlert(alertBox, result.message);

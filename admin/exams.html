@@ -20,6 +20,7 @@
         <a href="exams.html" class="active" aria-current="page">Examinations</a>
         <a href="questions.html">Questions</a>
         <a href="students.html">Students</a>
+        <a href="support.html">Student support</a>
         <a href="results.html" data-nav="results">Results</a>
         <a href="results.html?tab=logs" data-nav="logs">Monitoring log</a>
     </nav>
@@ -38,8 +39,8 @@
 
     <div class="table-wrap">
       <table class="data">
-        <thead><tr><th>ID</th><th>Examination</th><th>Duration</th><th>Questions</th><th>Pass mark</th><th>Submissions</th><th>Status</th><th>Actions</th></tr></thead>
-        <tbody id="examsTableBody"><tr><td colspan="8" class="empty-cell">Loading...</td></tr></tbody>
+        <thead><tr><th>ID</th><th>Examination</th><th>Duration</th><th>Questions</th><th>Pass mark</th><th>Schedule</th><th>Submissions</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="examsTableBody"><tr><td colspan="9" class="empty-cell">Loading...</td></tr></tbody>
       </table>
     </div>
   </main>
@@ -58,6 +59,11 @@
           <div class="field"><label for="examDurationInput">Duration (minutes)</label><input type="number" id="examDurationInput" min="1" max="300" step="1" required></div>
           <div class="field"><label for="examPassMarkInput">Pass mark (%)</label><input type="number" id="examPassMarkInput" min="0" max="100" step="1" required></div>
         </div>
+        <div class="field-row">
+          <div class="field"><label for="examStartInput">Scheduled start</label><input type="datetime-local" id="examStartInput"></div>
+          <div class="field"><label for="examEndInput">Scheduled end</label><input type="datetime-local" id="examEndInput"></div>
+        </div>
+        <p class="hint">Leave both blank for an examination without a date restriction. Active exams remain visible before/after the window, but can only be started during it.</p>
         <div class="field">
           <label for="examStatusInput">Status</label>
           <select id="examStatusInput"><option value="Inactive">Inactive (hidden from students)</option><option value="Active">Active (open to students)</option></select>

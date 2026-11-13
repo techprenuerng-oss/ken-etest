@@ -3,11 +3,12 @@ Everything the administrator can do. Every function first checks that the reques
 carries a valid ADMIN session token."""
 import math
 
-from .auth import public_student, require_admin
+from .auth import hash_password, public_student, require_admin
 from .db import fetch_all, fetch_one, generate_id, run
 from .exams import build_exam_info, exam_select_sql, find_exam, questions_for_exam
 from .helpers import (auth_required, clean_text, fail, is_scalar, now_utc, ok, req, round_half_up,
-                      text_length, to_iso, to_number, whole_number)
+                      is_valid_email, text_length, to_iso, to_number, whole_number)
+from datetime import datetime, timezone
 from .results import format_results, result_select_sql
 
 
@@ -71,6 +72,8 @@ def action_adminGetExams(data):
         info = build_exam_info(row)
         info["submissions"] = int(row["submissions"])
         info["date_created"] = to_iso(row["date_created"])
+        info["scheduled_start"] = to_iso(row.get("scheduled_start"))
+        info["scheduled_end"] = to_iso(row.get("scheduled_end"))
         listing.append(info)
     return ok("Examinations loaded.", listing)
 
@@ -90,6 +93,26 @@ def validate_exam_input(data):
     if pass_mark is None or pass_mark < 0 or pass_mark > 100:
         return fail("Pass mark must be a percentage from 0 to 100.", "VALIDATION"), None
     status = "Active" if req(data, "status") == "Active" else "Inactive"
+    def parse_schedule(value):
+        if value in (None, ""):
+            return None
+        if not isinstance(value, str):
+            return False
+        try:
+            parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+            if parsed.tzinfo is None:
+                return False
+            return parsed.astimezone(timezone.utc).replace(tzinfo=None, microsecond=0)
+        except ValueError:
+            return False
+    scheduled_start = parse_schedule(req(data, "scheduled_start"))
+    scheduled_end = parse_schedule(req(data, "scheduled_end"))
+    if scheduled_start is False or scheduled_end is False:
+        return fail("Enter valid examination start and end dates/times.", "VALIDATION"), None
+    if bool(scheduled_start) != bool(scheduled_end):
+        return fail("Enter both the scheduled start and end, or leave both blank.", "VALIDATION"), None
+    if scheduled_start and scheduled_end and scheduled_end <= scheduled_start:
+        return fail("The examination end time must be after its start time.", "VALIDATION"), None
     return None, {
         "title": title,
         "subject": subject,
@@ -97,6 +120,8 @@ def validate_exam_input(data):
         "duration_minutes": duration,
         "pass_mark": round_half_up(pass_mark, 2),
         "status": status,
+        "scheduled_start": scheduled_start,
+        "scheduled_end": scheduled_end,
     }
 
 
@@ -107,10 +132,10 @@ def action_adminCreateExam(data):
     if error:
         return error
     exam_id = generate_id("exam", "EX", 3)
-    run("INSERT INTO exams (exam_id, title, subject, description, duration_minutes, pass_mark, status, date_created) "
-        "VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
+    run("INSERT INTO exams (exam_id, title, subject, description, duration_minutes, pass_mark, status, scheduled_start, scheduled_end, date_created) "
+        "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
         (exam_id, exam["title"], exam["subject"], exam["description"], exam["duration_minutes"],
-         exam["pass_mark"], exam["status"], now_utc()))
+         exam["pass_mark"], exam["status"], exam["scheduled_start"], exam["scheduled_end"], now_utc()))
     return ok("Examination created.", {"exam_id": exam_id})
 
 
@@ -124,9 +149,9 @@ def action_adminUpdateExam(data):
     if error:
         return error
     run("UPDATE exams SET title = %s, subject = %s, description = %s, duration_minutes = %s, pass_mark = %s, "
-        "status = %s WHERE exam_id = %s",
+        "status = %s, scheduled_start = %s, scheduled_end = %s WHERE exam_id = %s",
         (exam["title"], exam["subject"], exam["description"], exam["duration_minutes"], exam["pass_mark"],
-         exam["status"], existing["exam_id"]))
+         exam["status"], exam["scheduled_start"], exam["scheduled_end"], existing["exam_id"]))
     return ok("Examination updated.")
 
 
@@ -257,6 +282,54 @@ def action_adminGetStudents(data):
         student["exams_taken"] = int(row["exams_taken"])
         listing.append(student)
     return ok("Students loaded.", listing)
+
+
+def action_adminCreateStudent(data):
+    if not require_admin(data):
+        return auth_required()
+    full_name = clean_text(req(data, "full_name"), 80)
+    matric = clean_text(req(data, "matric_number"), 40).upper()
+    class_name = clean_text(req(data, "class"), 60)
+    email = clean_text(req(data, "email"), 120).lower()
+    if text_length(full_name) < 3 or not matric or not class_name:
+        return fail("Enter the student's full name, matriculation number and class.", "VALIDATION")
+    if not email:
+        email = matric.lower().replace("/", "-") + "@students.ken-etest.local"
+    elif not is_valid_email(email):
+        return fail("Enter a valid email address, or leave the email field blank.", "VALIDATION")
+    if fetch_one("SELECT student_id FROM students WHERE UPPER(matric_number)=%s", (matric,)):
+        return fail("That matriculation number is already registered.", "DUPLICATE_MATRIC")
+    if fetch_one("SELECT student_id FROM students WHERE email=%s", (email,)):
+        return fail("That email address is already in use.", "DUPLICATE_EMAIL")
+    student_id = generate_id("student", "STU", 3)
+    try:
+        run("INSERT INTO students (student_id, matric_number, full_name, email, password_hash, `class`, status, date_registered) "
+            "VALUES (%s,%s,%s,%s,%s,%s,'Active',%s)",
+            (student_id, matric, full_name, email, hash_password(matric), class_name, now_utc()))
+    except Exception as error:
+        from .db import is_duplicate_key
+        if is_duplicate_key(error):
+            return fail("A student with that matriculation number or email already exists.", "DUPLICATE_STUDENT")
+        raise
+    return ok("Student registered. Their initial password is their matriculation number.",
+              {"student_id": student_id, "matric_number": matric})
+
+
+def action_adminUpdateStudentMatric(data):
+    if not require_admin(data):
+        return auth_required()
+    student_id = clean_text(req(data, "student_id"), 10)
+    matric = clean_text(req(data, "matric_number"), 40).upper()
+    student = fetch_one("SELECT student_id FROM students WHERE student_id=%s", (student_id,))
+    if not student:
+        return fail("Student not found.", "NOT_FOUND")
+    if not matric:
+        return fail("Enter a valid matriculation number.", "VALIDATION")
+    duplicate = fetch_one("SELECT student_id FROM students WHERE UPPER(matric_number)=%s AND student_id<>%s", (matric, student_id))
+    if duplicate:
+        return fail("That matriculation number is already assigned to another student.", "DUPLICATE_MATRIC")
+    run("UPDATE students SET matric_number=%s WHERE student_id=%s", (matric, student_id))
+    return ok("Student matriculation number updated. Their current password has not changed.")
 
 
 def action_adminSetStudentStatus(data):

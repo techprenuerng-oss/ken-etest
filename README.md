@@ -5,7 +5,7 @@
 
 Designed by: KENANAGHA DEINYEFA GODSPOWER (as shown in the landing page footer)
 
-Students register, log in, take timed multiple-choice examinations and see their marked result immediately. Administrators manage examinations, questions and students, and review results and monitoring events.
+Administrators register students by matriculation number. Students log in, take timed multiple-choice examinations and see their marked result immediately. Administrators manage examinations, questions and students, and review results and monitoring events.
 
 The frontend is plain HTML, CSS and JavaScript. The backend is written in **Python** (Flask) and the database is **MySQL / MariaDB**. This edition replaces the earlier Google Apps Script + Google Sheets backend; the pages, design and user experience are unchanged.
 
@@ -24,13 +24,14 @@ You need **Python 3.10 or newer** and a **MySQL or MariaDB** server. The MySQL t
 2. **Create the database.** Open http://localhost/phpmyadmin → **Import** tab → choose `database/ken_etest.sql` → **Go**.
    Or from the command line: `mysql -u root -p < database/ken_etest.sql`
    (The file creates the database `ken_etest`, all tables and the demo data. You do not need to create anything first.)
-3. **Check the settings** in `backend/config.py`. The defaults (user `root`, empty password, host `127.0.0.1`, port `3306`) match XAMPP, so normally nothing needs to change.
-4. **Start the application:**
+3. **For an existing live deployment:** back up the database first, then import `database/upgrade_v2.sql` into the existing `ken_etest` database. This is a one-time, additive migration; it does not drop existing tables or results. Do NOT import `database/ken_etest.sql` over a live database because that file resets all data.
+4. **Check the settings** in `backend/config.py`. The defaults (user `root`, empty password, host `127.0.0.1`, port `3306`) match XAMPP, so normally nothing needs to change.
+5. **Start the application:**
    ```bash
    python app.py                           # on Windows you can also use:  py app.py
    ```
-5. **Check the backend.** Open http://127.0.0.1:5000/api. You should see `"Ken E-Test API is running."`, `"database": "connected"` and `"tables_ready": true`.
-6. **Open the website:** http://127.0.0.1:5000/
+6. **Check the backend.** Open http://127.0.0.1:5000/api. You should see `"Ken E-Test API is running."`, `"database": "connected"` and `"tables_ready": true`.
+7. **Open the website:** http://127.0.0.1:5000/
    Admin panel: http://127.0.0.1:5000/admin/login.html
 
 Keep the terminal open while you use the site; press `Ctrl+C` to stop it. Do not double-click the HTML files (`file://`): the pages must be opened through the running application so they can reach the API.
@@ -42,13 +43,16 @@ These are demonstration accounts created by the SQL file. Change or delete them 
 | Role | Login | Password |
 |---|---|---|
 | Admin | username `admin` | `Admin@123` |
-| Student STU001 | `chidinma.okafor@demo.edu` | `Student@123` |
-| Student STU002 | `tamuno.briggs@demo.edu` | `Student@123` |
-| Student STU003 | `ebiere.seigha@demo.edu` | `Student@123` |
-| Student STU004 | `oluwaseun.adeyemi@demo.edu` | `Student@123` |
-| Student STU005 | `fatima.bello@demo.edu` | `Student@123` |
+| Student STU001 | `STU001` | `Student@123` |
+| Student STU002 | `STU002` | `Student@123` |
+| Student STU003 | `STU003` | `Student@123` |
+| Student STU004 | `STU004` | `Student@123` |
+| Student STU005 | `STU005` | `Student@123` |
+| Demo student 1 (after v2 migration) | `DEMO/2026/001` | `Student@123` |
+| Demo student 2 (after v2 migration) | `DEMO/2026/002` | `Student@123` |
+| Demo student 3 (after v2 migration) | `DEMO/2026/003` | `Student@123` |
 
-STU001–STU004 have already taken both active examinations. **To demonstrate taking an exam**, register a new student on the website, or log in as **STU005** (`fatima.bello@demo.edu`), who has only taken *ICT Fundamentals* and can take *Computer Applications*.
+STU001–STU004 have already taken both active examinations. **To demonstrate taking an exam**, ask the administrator to register a new student, or log in as **STU005** (`STU005`), who has only taken *ICT Fundamentals* and can take *Computer Applications*.
 
 Demo data: 3 examinations (`EX001` ICT Fundamentals, 15 min; `EX002` Computer Applications, 20 min; `EX003` Introduction to Programming, **inactive**, so you can demonstrate activating it), 25 questions (2 marks each), 9 results and 8 monitoring events.
 
@@ -83,9 +87,9 @@ Every database setting can also be given as an environment variable (`ETEST_DB_H
 
 ## Features
 
-**Student**: landing page, registration, login, logout · dashboard with statistics and open examinations · instructions page with the monitoring notice · timed multiple-choice examination (countdown, previous/next, question navigator, answered indicators, progress bar) · submit confirmation and automatic submission when the timer reaches zero · automatic marking on the server · result page and examination history.
+**Student**: landing page, matriculation-number login, logout, support requests and password change · dashboard with statistics and open examinations · instructions page with the monitoring notice · timed multiple-choice examination (countdown, previous/next, question navigator, answered indicators, progress bar) · submit confirmation and automatic submission when the timer reaches zero · automatic marking on the server · result page and examination history.
 
-**Administrator**: dashboard (students, examinations, submissions, average score, pass rate, per-exam chart) · create/edit/activate/deactivate examinations · add/edit/delete questions · view students and activate/deactivate accounts · view and filter results · monitoring log.
+**Administrator**: dashboard (students, examinations, submissions, average score, pass rate, per-exam chart) · register students from the official student database (initial password = matriculation number) · review/respond to student support tickets · create/edit/schedule/activate/deactivate examinations · add/edit/delete questions · view students and activate/deactivate accounts · view and filter results · monitoring log.
 
 **Randomisation**: questions and options are shuffled for every student (see below).
 
@@ -118,7 +122,9 @@ A page calls a method of the `API` object in `js/api.js`, for example `API.submi
 - **One attempt per student per examination**, enforced twice: in the code, and by a `UNIQUE (student_id, exam_id)` rule in the database, so a double click cannot create two results (tested with six simultaneous submissions).
 - **Submission is one database transaction**: check, mark, store the result and close the attempt together.
 - **Session tokens.** After login the server returns a random token (only its SHA-256 hash is stored). The browser keeps it in `sessionStorage` and sends it with every request; the student ID is read from the token on the server, never trusted from the browser.
-- **Passwords are hashed with bcrypt.**
+- **Passwords are hashed with bcrypt.** Newly registered students receive their matriculation number as their initial password and can change it after login. Existing accounts retain their existing password through the v2 migration.
+- **Scheduling is enforced by the backend.** Active future/expired exams remain visible to students, but the API rejects attempts outside the configured time window. Deactivated exams are not returned to student listings.
+- **Support requests are private to their student and the administrator.** Students can see their own tickets and admin responses; only admins can view the support inbox.
 - **Every SQL query uses placeholders (parameterised queries)**, so user input cannot change a query (no SQL injection).
 - **Only the website files are served.** `app.py` serves the pages, `css/`, `js/` and `assets/` and nothing else; the Python code, the SQL file and the tests cannot be downloaded from a browser.
 
@@ -157,7 +163,7 @@ Created by `database/ken_etest.sql` (InnoDB, utf8mb4; written for MySQL 5.7+ / M
 | Table | Purpose | Main columns |
 |---|---|---|
 | `admins` | Administrator accounts | `admin_id`, `username`, `password_hash`, `name` |
-| `students` | Student accounts | `student_id`, `full_name`, `email` (unique), `password_hash`, `class`, `status`, `date_registered` |
+| `students` | Student accounts | `student_id`, `matric_number` (unique), `full_name`, `email` (unique), `password_hash`, `class`, `status`, `date_registered` |
 | `exams` | Examinations | `exam_id`, `title`, `subject`, `description`, `duration_minutes`, `pass_mark` (%), `status`, `date_created` |
 | `questions` | Multiple-choice questions | `question_id`, `exam_id`, `question`, `option_a`–`option_d`, `correct_answer` (A–D), `marks` |
 | `results` | Marked submissions | `result_id`, `student_id`, `exam_id`, `score`, `total_marks`, `percentage`, `status` (PASS/FAIL), `start_time`, `submit_time` · **unique** (`student_id`, `exam_id`) |

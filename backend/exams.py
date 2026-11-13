@@ -11,6 +11,7 @@ Randomisation (how it works)
   B is really A, C is really D and D is really B.
 - Correct answers are never sent to the browser."""
 import json
+from datetime import datetime, timezone
 
 from . import config
 from .auth import require_student
@@ -49,7 +50,19 @@ def build_exam_info(exam):
         "total_marks": int(exam["marks_sum"]),
         "pass_mark": float(exam["pass_mark"]),
         "status": exam["status"],
+        "scheduled_start": exam.get("scheduled_start").replace(tzinfo=timezone.utc).isoformat().replace("+00:00", "Z") if exam.get("scheduled_start") else None,
+        "scheduled_end": exam.get("scheduled_end").replace(tzinfo=timezone.utc).isoformat().replace("+00:00", "Z") if exam.get("scheduled_end") else None,
     }
+
+
+def exam_window(exam):
+    now = datetime.now(timezone.utc).replace(tzinfo=None)
+    start, end = exam.get("scheduled_start"), exam.get("scheduled_end")
+    if start and now < start:
+        return "upcoming"
+    if end and now >= end:
+        return "expired"
+    return "open"
 
 
 def build_attempt(result):
@@ -156,6 +169,7 @@ def action_getAvailableExams(data):
             continue
         info = build_exam_info(exam)
         info["attempt"] = build_attempt(results.get(exam["exam_id"]))
+        info["window_status"] = exam_window(exam)
         listing.append(info)
     return ok("Examinations loaded.", listing)
 
@@ -173,6 +187,7 @@ def action_getExam(data):
         return fail("This examination is not active.", "EXAM_INACTIVE")
 
     info = build_exam_info(exam)
+    info["window_status"] = exam_window(exam)
     result = find_result(student["student_id"], exam["exam_id"])
     info["attempt"] = build_attempt(result)
     info["in_progress"] = result is None and get_active_attempt(student["student_id"], exam["exam_id"]) is not None
@@ -191,6 +206,9 @@ def action_startExam(data):
         return fail("Examination not found.", "NOT_FOUND")
     if not is_active_status(exam["status"]):
         return fail("This examination is not active.", "EXAM_INACTIVE")
+    window = exam_window(exam)
+    if window == "upcoming":
+        return fail("This examination has not started yet. Check the scheduled start time.", "EXAM_NOT_STARTED")
 
     existing = find_result(student["student_id"], exam["exam_id"])
     if existing:
@@ -203,6 +221,8 @@ def action_startExam(data):
 
     attempt = get_active_attempt(student["student_id"], exam["exam_id"])
     resumed = attempt is not None
+    if window == "expired" and not attempt:
+        return fail("The scheduled examination period has ended.", "EXAM_EXPIRED")
     if not attempt:
         question_order, option_order = create_layout(questions)
         # INSERT IGNORE: if two start requests arrive together, only the first one is stored.
@@ -214,6 +234,9 @@ def action_startExam(data):
     total_seconds = int(exam["duration_minutes"]) * 60
     elapsed = int(utc_now_seconds() - utc_timestamp(attempt["started_at"]))
     remaining = max(0, total_seconds - elapsed)
+    if exam.get("scheduled_end"):
+        seconds_until_close = int((exam["scheduled_end"] - datetime.now(timezone.utc).replace(tzinfo=None)).total_seconds())
+        remaining = min(remaining, max(0, seconds_until_close))
 
     public_questions = [public_question(item["question"], item["order"])
                         for item in resolve_layout(attempt, questions)]

@@ -17,7 +17,7 @@
     </a>
     <div>
       <h1>Sit your examination and get your result straight away.</h1>
-      <p>Log in with the email and password you used to register.</p>
+      <p>Log in with the matriculation number registered by your administrator and your password.</p>
     </div>
     <div class="aside-bubbles" aria-hidden="true">
       <span class="bubble">A</span><span class="bubble filled">B</span><span class="bubble">C</span><span class="bubble">D</span>
@@ -34,8 +34,8 @@
 
       <form id="loginForm" novalidate>
         <div class="field">
-          <label for="email">Email address</label>
-          <input type="email" id="email" name="email" autocomplete="email" required>
+          <label for="matric_number">Matriculation number</label>
+          <input type="text" id="matric_number" name="matric_number" autocomplete="username" maxlength="40" required>
         </div>
         <div class="field">
           <label for="password">Password</label>
@@ -44,7 +44,7 @@
         <button type="submit" id="loginButton" class="btn btn-primary btn-block btn-lg">Log in</button>
       </form>
 
-      <p class="auth-links">No account yet? <a href="register.html">Create a student account</a><br>
+      <p class="auth-links">Your account must first be registered by the administrator.<br>
         Examiner? <a href="admin/login.html">Go to admin login</a></p>
     </div>
   </main>

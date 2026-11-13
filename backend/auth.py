@@ -80,6 +80,7 @@ def public_student(student):
     """Student data that is safe to send to the browser (never the password hash)."""
     return {
         "student_id": student["student_id"],
+        "matric_number": student.get("matric_number", student["student_id"]),
         "full_name": student["full_name"],
         "email": student["email"],
         "class": student["class"],
@@ -91,15 +92,18 @@ def public_student(student):
 # ---------- actions ----------
 
 def action_loginStudent(data):
-    email = clean_text(req(data, "email"), 120).lower()
+    matric = clean_text(req(data, "matric_number") or req(data, "email"), 40).upper()
     password = req(data, "password")
     password = password if isinstance(password, str) else ""
-    if email == "" or password == "":
-        return fail("Enter your email and password.", "VALIDATION")
+    if matric == "" or password == "":
+        return fail("Enter your matriculation number and password.", "VALIDATION")
 
-    student = fetch_one("SELECT * FROM students WHERE email = %s", (email,))
+    student = fetch_one("SELECT * FROM students WHERE UPPER(matric_number) = %s", (matric,))
+    # Compatibility for older installations while they complete the migration.
+    if not student and "@" in matric:
+        student = fetch_one("SELECT * FROM students WHERE email = %s", (matric.lower(),))
     if not student or not password_ok(password, student["password_hash"]):
-        return fail("Incorrect email or password.", "INVALID_LOGIN")
+        return fail("Incorrect matriculation number or password.", "INVALID_LOGIN")
     if not is_active_status(student["status"]):
         return fail("Your account is inactive. Contact the administrator.", "ACCOUNT_INACTIVE")
 
@@ -133,30 +137,21 @@ def action_logout(data):
 
 
 def action_registerStudent(data):
-    full_name = clean_text(req(data, "full_name"), 80)
-    email = clean_text(req(data, "email"), 120).lower()
-    password = req(data, "password")
-    password = password if isinstance(password, str) else ""
-    class_name = clean_text(req(data, "class"), 60)
+    return fail("Student accounts are created by the administrator. Contact your department or examination administrator.",
+                "ADMIN_REGISTRATION_ONLY")
 
-    if text_length(full_name) < 3:
-        return fail("Enter your full name (at least 3 characters).", "VALIDATION")
-    if not is_valid_email(email):
-        return fail("Enter a valid email address.", "VALIDATION")
-    if text_length(password) < 6 or text_length(password) > 64:
-        return fail("Password must be between 6 and 64 characters.", "VALIDATION")
-    if class_name == "":
-        return fail("Enter your class.", "VALIDATION")
-    if fetch_one("SELECT student_id FROM students WHERE email = %s", (email,)):
-        return fail("An account with this email already exists.", "DUPLICATE_EMAIL")
 
-    student_id = generate_id("student", "STU", 3)
-    try:
-        run("INSERT INTO students (student_id, full_name, email, password_hash, `class`, status, date_registered) "
-            "VALUES (%s, %s, %s, %s, %s, 'Active', %s)",
-            (student_id, full_name, email, hash_password(password), class_name, now_utc()))
-    except Exception as error:
-        if is_duplicate_key(error):     # two registrations with the same email at the same moment
-            return fail("An account with this email already exists.", "DUPLICATE_EMAIL")
-        raise
-    return ok("Registration successful. You can now log in.", {"student_id": student_id})
+def action_changeStudentPassword(data):
+    student = require_student(data)
+    if not student:
+        return auth_required()
+    current = req(data, "current_password")
+    new_password = req(data, "new_password")
+    if not isinstance(current, str) or not password_ok(current, student["password_hash"]):
+        return fail("Your current password is incorrect.", "INVALID_PASSWORD")
+    if not isinstance(new_password, str) or len(new_password) < 8 or len(new_password) > 64:
+        return fail("New password must be between 8 and 64 characters.", "VALIDATION")
+    if new_password == current:
+        return fail("Choose a password different from your current password.", "VALIDATION")
+    run("UPDATE students SET password_hash=%s WHERE student_id=%s", (hash_password(new_password), student["student_id"]))
+    return ok("Password changed successfully.")

@@ -49,7 +49,19 @@ async function initInstructions() {
 
   const agree = document.getElementById("agreeCheck");
   const startBtn = document.getElementById("startBtn");
-  agree.addEventListener("change", function () { startBtn.disabled = !agree.checked; });
+  if (exam.window_status === "upcoming") {
+    startBtn.disabled = true;
+    startBtn.textContent = "Opens " + formatDateTime(exam.scheduled_start);
+    showAlert(alertBox, "This examination is scheduled for a later time. You can return when it opens.", "info");
+  } else if (exam.window_status === "expired" && !exam.in_progress) {
+    startBtn.disabled = true;
+    startBtn.textContent = "Examination closed";
+    showAlert(alertBox, "The scheduled examination period has ended.", "info");
+  } else if (exam.window_status === "expired" && exam.in_progress) {
+    startBtn.textContent = "Resume to submit saved attempt";
+    showAlert(alertBox, "The scheduled period has ended. Resuming will submit the saved attempt immediately.", "info");
+  }
+  agree.addEventListener("change", function () { startBtn.disabled = !agree.checked || (exam.window_status !== "open" && !(exam.window_status === "expired" && exam.in_progress)); });
   startBtn.addEventListener("click", function () {
     window.location.href = "exam.html?exam=" + encodeURIComponent(examId);
   });

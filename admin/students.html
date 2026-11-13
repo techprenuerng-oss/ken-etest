@@ -20,6 +20,7 @@
         <a href="exams.html">Examinations</a>
         <a href="questions.html">Questions</a>
         <a href="students.html" class="active" aria-current="page">Students</a>
+        <a href="support.html">Student support</a>
         <a href="results.html" data-nav="results">Results</a>
         <a href="results.html?tab=logs" data-nav="logs">Monitoring log</a>
     </nav>
@@ -30,25 +31,26 @@
   </aside>
 
   <main class="admin-main">
-    <div class="page-head"><div><h1>Students</h1><p>Everyone who has registered on the system.</p></div></div>
+    <div class="page-head"><div><h1>Students</h1><p>Register students from the official student database. Their initial password is their matriculation number.</p></div><button class="btn btn-primary" id="createStudentBtn">Register student</button></div>
     <div id="pageAlert" class="alert" role="alert" hidden></div>
 
     <div class="toolbar">
       <div class="filters">
         <label for="studentSearch" class="visually-hidden">Search students</label>
-        <input type="text" id="studentSearch" placeholder="Search by name, email, ID or class">
+        <input type="text" id="studentSearch" placeholder="Search by name, matric number, ID or class">
       </div>
       <span class="summary-text" id="studentsCount"></span>
     </div>
     <div class="table-wrap">
       <table class="data">
-        <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Class</th><th>Exams taken</th><th>Registered</th><th>Status</th><th>Actions</th></tr></thead>
+        <thead><tr><th>Matric number</th><th>Name</th><th>Email</th><th>Class</th><th>Exams taken</th><th>Registered</th><th>Status</th><th>Actions</th></tr></thead>
         <tbody id="studentsTableBody"><tr><td colspan="8" class="empty-cell">Loading...</td></tr></tbody>
       </table>
     </div>
   </main>
 </div>
-
+<div class="modal-overlay" id="studentModal" hidden><div class="modal" role="dialog" aria-modal="true" aria-labelledby="studentModalTitle"><h2 id="studentModalTitle">Register student</h2><p class="muted">The matriculation number will be used as the student's initial password. Students can change it after their first login.</p><div id="studentFormAlert" class="alert" role="alert" hidden></div><form id="studentForm"><div class="field"><label for="newStudentName">Full name</label><input id="newStudentName" maxlength="80" required></div><div class="field"><label for="newStudentMatric">Matriculation number</label><input id="newStudentMatric" maxlength="40" required></div><div class="field"><label for="newStudentClass">Department / class</label><input id="newStudentClass" maxlength="60" required></div><div class="field"><label for="newStudentEmail">Email (optional)</label><input id="newStudentEmail" type="email" maxlength="120"></div><div class="modal-actions"><button type="button" class="btn btn-secondary" id="cancelStudentBtn">Cancel</button><button class="btn btn-primary" id="saveStudentBtn">Register student</button></div></form></div></div>
+<div class="modal-overlay" id="matricModal" hidden><div class="modal" role="dialog" aria-modal="true" aria-labelledby="matricModalTitle"><h2 id="matricModalTitle">Update matriculation number</h2><div id="matricFormAlert" class="alert" role="alert" hidden></div><form id="matricForm"><input type="hidden" id="editStudentId"><div class="field"><label for="editStudentMatric">Matriculation number</label><input id="editStudentMatric" maxlength="40" required></div><p class="hint">This changes the student's login ID, not their password.</p><div class="modal-actions"><button type="button" class="btn btn-secondary" id="cancelMatricBtn">Cancel</button><button class="btn btn-primary" id="saveMatricBtn">Save matric number</button></div></form></div></div>
   <script src="../js/config.js"></script>
   <script src="../js/api.js"></script>
   <script src="../js/auth.js"></script>

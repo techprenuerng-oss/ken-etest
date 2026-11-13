@@ -73,3 +73,11 @@
   .toolbar select, .toolbar input[type="text"] { width: 100%; }
   .toolbar .filters { width: 100%; }
 }
+
+/* Support inbox and ticket responses */
+.ticket-list { display: grid; gap: .9rem; }
+.ticket-card { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; }
+.ticket-card h3 { margin-bottom: .35rem; }
+.ticket-card p { margin-bottom: .45rem; }
+.ticket-card .btn { flex: 0 0 auto; }
+@media (max-width: 600px) { .ticket-card { flex-direction: column; } }

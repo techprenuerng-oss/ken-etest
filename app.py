@@ -17,7 +17,7 @@ from datetime import datetime, timezone
 import pymysql
 from flask import Flask, Response, abort, request, send_from_directory
 
-from backend import admin, auth, config, exams, proctoring, results
+from backend import admin, auth, config, exams, proctoring, results, support
 from backend.db import close_conn, fetch_one, get_conn
 from backend.helpers import clean_text, fail, ok
 
@@ -33,7 +33,10 @@ ACTIONS = {
     # authentication
     "registerStudent": auth.action_registerStudent,
     "loginStudent": auth.action_loginStudent,
+    "changeStudentPassword": auth.action_changeStudentPassword,
     "loginAdmin": auth.action_loginAdmin,
+    "createSupportTicket": support.action_createSupportTicket,
+    "getMySupportTickets": support.action_getMySupportTickets,
     "logout": auth.action_logout,
     # student
     "getAvailableExams": exams.action_getAvailableExams,
@@ -54,7 +57,11 @@ ACTIONS = {
     "adminUpdateQuestion": admin.action_adminUpdateQuestion,
     "adminDeleteQuestion": admin.action_adminDeleteQuestion,
     "adminGetStudents": admin.action_adminGetStudents,
+    "adminCreateStudent": admin.action_adminCreateStudent,
+    "adminUpdateStudentMatric": admin.action_adminUpdateStudentMatric,
     "adminSetStudentStatus": admin.action_adminSetStudentStatus,
+    "adminGetSupportTickets": support.action_adminGetSupportTickets,
+    "adminUpdateSupportTicket": support.action_adminUpdateSupportTicket,
     "adminGetResults": admin.action_adminGetResults,
     "adminGetProctoringLogs": proctoring.action_adminGetProctoringLogs,
 }

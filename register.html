@@ -16,8 +16,8 @@
       <span class="brand-text"><strong>Ken E-Test</strong><small>Online Quiz and Examination System</small></span>
     </a>
     <div>
-      <h1>Create your student account.</h1>
-      <p>You only need to register once. After that you can take every examination that is open to your class.</p>
+      <h1>Student accounts are issued by the administrator.</h1>
+      <p>Your matriculation number must first be registered against the official student database.</p>
     </div>
     <div class="aside-bubbles" aria-hidden="true">
       <span class="bubble">A</span><span class="bubble">B</span><span class="bubble filled">C</span><span class="bubble">D</span>
@@ -27,44 +27,17 @@
   <main class="auth-main">
     <div class="auth-card">
       <a class="back-link" href="index.html">Back to home page</a>
-      <h2>Student registration</h2>
-      <p class="subtitle">Fill in your details to get started.</p>
+      <h2>Account registration</h2>
+      <p class="subtitle">Contact your examination administrator to register your matriculation number and receive your initial password.</p>
 
       <div id="formAlert" class="alert" role="alert" hidden></div>
 
-      <form id="registerForm" novalidate>
-        <div class="field">
-          <label for="full_name">Full name</label>
-          <input type="text" id="full_name" name="full_name" autocomplete="name" maxlength="80" required>
-        </div>
-        <div class="field">
-          <label for="email">Email address</label>
-          <input type="email" id="email" name="email" autocomplete="email" maxlength="120" required>
-        </div>
-        <div class="field">
-          <label for="class_name">Class</label>
-          <input type="text" id="class_name" name="class_name" maxlength="60" placeholder="For example, Computer Science 400L" required>
-        </div>
-        <div class="field-row">
-          <div class="field">
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" autocomplete="new-password" minlength="6" required>
-            <p class="hint">At least 6 characters.</p>
-          </div>
-          <div class="field">
-            <label for="confirm_password">Confirm password</label>
-            <input type="password" id="confirm_password" name="confirm_password" autocomplete="new-password" required>
-          </div>
-        </div>
-        <button type="submit" id="registerButton" class="btn btn-primary btn-block btn-lg">Create account</button>
-      </form>
-
-      <p class="auth-links">Already registered? <a href="login.html">Log in</a></p>
+      <p>Your initial password will be your matriculation number. You can change it after your first successful login.</p>
+      <p class="auth-links"><a href="login.html">Proceed to student login</a></p>
     </div>
   </main>
 
   <script src="js/config.js"></script>
   <script src="js/api.js"></script>
-  <script src="js/auth.js"></script>
 </body>
 </html>

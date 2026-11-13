@@ -29,3 +29,7 @@
 @media (max-width: 480px) {
   .info-list { grid-template-columns: 1fr 1fr; gap: .6rem; }
 }
+
+/* Student support ticket responses */
+.notice-box { background: var(--mint); border: 1px solid var(--line); border-radius: 10px; padding: .8rem 1rem; margin-top: .75rem; }
+.notice-box p { margin: .35rem 0 0; }

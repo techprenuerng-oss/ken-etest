@@ -18,6 +18,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 CREATE DATABASE IF NOT EXISTS `ken_etest` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE `ken_etest`;
 
+DROP TABLE IF EXISTS `support_tickets`;
 DROP TABLE IF EXISTS `sessions`;
 DROP TABLE IF EXISTS `exam_attempts`;
 DROP TABLE IF EXISTS `proctoring_logs`;
@@ -41,6 +42,7 @@ CREATE TABLE `admins` (
 
 CREATE TABLE `students` (
   `student_id`      VARCHAR(10)  NOT NULL,
+  `matric_number`   VARCHAR(40)  NOT NULL,
   `full_name`       VARCHAR(80)  NOT NULL,
   `email`           VARCHAR(120) NOT NULL,
   `password_hash`   VARCHAR(255) NOT NULL,
@@ -48,7 +50,8 @@ CREATE TABLE `students` (
   `status`          ENUM('Active','Inactive') NOT NULL DEFAULT 'Active',
   `date_registered` DATETIME     NOT NULL,
   PRIMARY KEY (`student_id`),
-  UNIQUE KEY `uq_students_email` (`email`)
+  UNIQUE KEY `uq_students_email` (`email`),
+  UNIQUE KEY `uq_students_matric_number` (`matric_number`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- The number of questions is NOT stored here; it is counted from `questions`,
@@ -61,6 +64,8 @@ CREATE TABLE `exams` (
   `duration_minutes` SMALLINT UNSIGNED NOT NULL,
   `pass_mark`        DECIMAL(5,2) NOT NULL,
   `status`           ENUM('Active','Inactive') NOT NULL DEFAULT 'Inactive',
+  `scheduled_start`  DATETIME NULL,
+  `scheduled_end`    DATETIME NULL,
   `date_created`     DATETIME     NOT NULL,
   PRIMARY KEY (`exam_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -142,6 +147,24 @@ CREATE TABLE `sessions` (
   KEY `idx_sessions_expires` (`expires_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE `support_tickets` (
+  `ticket_id` VARCHAR(12) NOT NULL,
+  `student_id` VARCHAR(10) NOT NULL,
+  `exam_id` VARCHAR(10) NULL,
+  `category` VARCHAR(60) NOT NULL,
+  `subject` VARCHAR(120) NOT NULL,
+  `message` TEXT NOT NULL,
+  `status` ENUM('Open','In Progress','Resolved') NOT NULL DEFAULT 'Open',
+  `admin_reply` TEXT NOT NULL,
+  `created_at` DATETIME NOT NULL,
+  `updated_at` DATETIME NOT NULL,
+  PRIMARY KEY (`ticket_id`),
+  KEY `idx_support_student` (`student_id`),
+  KEY `idx_support_status` (`status`),
+  CONSTRAINT `fk_support_student` FOREIGN KEY (`student_id`) REFERENCES `students` (`student_id`),
+  CONSTRAINT `fk_support_exam` FOREIGN KEY (`exam_id`) REFERENCES `exams` (`exam_id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- Counters used to create readable IDs such as STU006, EX004, Q026, RES010, LOG0009.
 -- An update on one row is atomic, so two requests can never receive the same ID.
 CREATE TABLE `counters` (
@@ -160,12 +183,18 @@ INSERT INTO `admins` (`admin_id`,`username`,`password_hash`,`name`) VALUES
   ('ADM001', 'admin', '$2y$10$0z9tIeY25m0jfFKBCUbo9uTPgouHQUZWOkxx51y.iet8kwjRJywgu', 'System Administrator');
 
 -- Students (demo password for all five: Student@123)
-INSERT INTO `students` (`student_id`,`full_name`,`email`,`password_hash`,`class`,`status`,`date_registered`) VALUES
-  ('STU001', 'Chidinma Okafor', 'chidinma.okafor@demo.edu', '$2y$10$NpgA.tGFbGraj4Or9dJIWelm6WKTjgNMBnvBopy7R9KIu2ekbAt56', 'Computer Science 400L', 'Active', TIMESTAMP(DATE_SUB(UTC_DATE(), INTERVAL 60 DAY), '09:00:00')),
-  ('STU002', 'Tamuno Briggs', 'tamuno.briggs@demo.edu', '$2y$10$4QMfrOpLx4ugfvdzl.rOMORlZ7.9T.IlUDXc.r8SJEw3p1NBUdwRu', 'Computer Science 400L', 'Active', TIMESTAMP(DATE_SUB(UTC_DATE(), INTERVAL 55 DAY), '09:00:00')),
-  ('STU003', 'Ebiere Seigha', 'ebiere.seigha@demo.edu', '$2y$10$/XgrKF7UDgUmWZfrc8hte.32trZZJ071eLKbrvYOeFS13Xm4/gzuC', 'Information Technology 300L', 'Active', TIMESTAMP(DATE_SUB(UTC_DATE(), INTERVAL 48 DAY), '09:00:00')),
-  ('STU004', 'Oluwaseun Adeyemi', 'oluwaseun.adeyemi@demo.edu', '$2y$10$tqyBjbeOScaDyRshU5ftjO3k1KjVTs6uz0aoa2G/.Eptoy/xiRM.6', 'Information Technology 300L', 'Active', TIMESTAMP(DATE_SUB(UTC_DATE(), INTERVAL 40 DAY), '09:00:00')),
-  ('STU005', 'Fatima Bello', 'fatima.bello@demo.edu', '$2y$10$0QtAVXdvyj0ySN5FHT3YkuRlGIsRsM6g0pzEHwXZlXoj0Bnp9NvAS', 'Computer Science 400L', 'Active', TIMESTAMP(DATE_SUB(UTC_DATE(), INTERVAL 35 DAY), '09:00:00'));
+INSERT INTO `students` (`student_id`,`matric_number`,`full_name`,`email`,`password_hash`,`class`,`status`,`date_registered`) VALUES
+  ('STU001','STU001', 'Chidinma Okafor', 'chidinma.okafor@demo.edu', '$2y$10$NpgA.tGFbGraj4Or9dJIWelm6WKTjgNMBnvBopy7R9KIu2ekbAt56', 'Computer Science 400L', 'Active', TIMESTAMP(DATE_SUB(UTC_DATE(), INTERVAL 60 DAY), '09:00:00')),
+  ('STU002','STU002', 'Tamuno Briggs', 'tamuno.briggs@demo.edu', '$2y$10$4QMfrOpLx4ugfvdzl.rOMORlZ7.9T.IlUDXc.r8SJEw3p1NBUdwRu', 'Computer Science 400L', 'Active', TIMESTAMP(DATE_SUB(UTC_DATE(), INTERVAL 55 DAY), '09:00:00')),
+  ('STU003','STU003', 'Ebiere Seigha', 'ebiere.seigha@demo.edu', '$2y$10$/XgrKF7UDgUmWZfrc8hte.32trZZJ071eLKbrvYOeFS13Xm4/gzuC', 'Information Technology 300L', 'Active', TIMESTAMP(DATE_SUB(UTC_DATE(), INTERVAL 48 DAY), '09:00:00')),
+  ('STU004','STU004', 'Oluwaseun Adeyemi', 'oluwaseun.adeyemi@demo.edu', '$2y$10$tqyBjbeOScaDyRshU5ftjO3k1KjVTs6uz0aoa2G/.Eptoy/xiRM.6', 'Information Technology 300L', 'Active', TIMESTAMP(DATE_SUB(UTC_DATE(), INTERVAL 40 DAY), '09:00:00')),
+  ('STU005','STU005', 'Fatima Bello', 'fatima.bello@demo.edu', '$2y$10$0QtAVXdvyj0ySN5FHT3YkuRlGIsRsM6g0pzEHwXZlXoj0Bnp9NvAS', 'Computer Science 400L', 'Active', TIMESTAMP(DATE_SUB(UTC_DATE(), INTERVAL 35 DAY), '09:00:00'));
+
+-- Additional presentation accounts (password for all three: Student@123).
+INSERT INTO `students` (`student_id`,`matric_number`,`full_name`,`email`,`password_hash`,`class`,`status`,`date_registered`) VALUES
+  ('STU006','DEMO/2026/001','Demo Student One','demo.student1@ken-etest.local','$2y$10$NpgA.tGFbGraj4Or9dJIWelm6WKTjgNMBnvBopy7R9KIu2ekbAt56','Computer Science 400L','Active',UTC_TIMESTAMP()),
+  ('STU007','DEMO/2026/002','Demo Student Two','demo.student2@ken-etest.local','$2y$10$4QMfrOpLx4ugfvdzl.rOMORlZ7.9T.IlUDXc.r8SJEw3p1NBUdwRu','Information Technology 300L','Active',UTC_TIMESTAMP()),
+  ('STU008','DEMO/2026/003','Demo Student Three','demo.student3@ken-etest.local','$2y$10$/XgrKF7UDgUmWZfrc8hte.32trZZJ071eLKbrvYOeFS13Xm4/gzuC','Computer Science 400L','Active',UTC_TIMESTAMP());
 
 -- Examinations (EX003 is inactive so you can demonstrate activating it)
 INSERT INTO `exams` (`exam_id`,`title`,`subject`,`description`,`duration_minutes`,`pass_mark`,`status`,`date_created`) VALUES
@@ -225,4 +254,4 @@ INSERT INTO `proctoring_logs` (`log_id`,`student_id`,`exam_id`,`event_type`,`eve
   ('LOG0008', 'STU003', 'EX002', 'TAB_SWITCH', 'The student switched to another browser tab.', TIMESTAMP(DATE_SUB(UTC_DATE(), INTERVAL 18 DAY), '09:47:00'), 'high');
 
 -- ID counters start at the highest demo ID, so the next new record gets the next number
-INSERT INTO `counters` (`name`,`value`) VALUES ('student', 5), ('exam', 3), ('question', 25), ('result', 9), ('log', 8);
+INSERT INTO `counters` (`name`,`value`) VALUES ('student', 8), ('exam', 3), ('question', 25), ('result', 9), ('log', 8), ('support', 0);

@@ -73,7 +73,10 @@ async function apiRequest(action, data, role) {
 const API = {
   // Authentication
   registerStudent: (data) => apiRequest("registerStudent", data),
-  loginStudent: (email, password) => apiRequest("loginStudent", { email, password }),
+  loginStudent: (matricNumber, password) => apiRequest("loginStudent", { matric_number: matricNumber, password }),
+  changeStudentPassword: (currentPassword, newPassword) => apiRequest("changeStudentPassword", { current_password: currentPassword, new_password: newPassword }, "student"),
+  createSupportTicket: (ticket) => apiRequest("createSupportTicket", ticket, "student"),
+  getMySupportTickets: () => apiRequest("getMySupportTickets", {}, "student"),
   loginAdmin: (username, password) => apiRequest("loginAdmin", { username, password }),
   logout: (role) => apiRequest("logout", {}, role),
 
@@ -98,6 +101,10 @@ const API = {
   adminUpdateQuestion: (question) => apiRequest("adminUpdateQuestion", question, "admin"),
   adminDeleteQuestion: (questionId) => apiRequest("adminDeleteQuestion", { question_id: questionId }, "admin"),
   adminGetStudents: () => apiRequest("adminGetStudents", {}, "admin"),
+  adminCreateStudent: (student) => apiRequest("adminCreateStudent", student, "admin"),
+  adminUpdateStudentMatric: (studentId, matricNumber) => apiRequest("adminUpdateStudentMatric", { student_id: studentId, matric_number: matricNumber }, "admin"),
+  adminGetSupportTickets: (status) => apiRequest("adminGetSupportTickets", { status: status || "" }, "admin"),
+  adminUpdateSupportTicket: (ticket) => apiRequest("adminUpdateSupportTicket", ticket, "admin"),
   adminSetStudentStatus: (studentId, status) => apiRequest("adminSetStudentStatus", { student_id: studentId, status: status }, "admin"),
   adminGetResults: (examId) => apiRequest("adminGetResults", { exam_id: examId || "" }, "admin"),
   adminGetProctoringLogs: (examId, eventType) =>
